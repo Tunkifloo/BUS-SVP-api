@@ -20,7 +20,7 @@ class BusRepositoryImpl(BaseRepository[Bus, BusModel], BusRepository):
 
     def _model_to_entity(self, model: BusModel) -> Bus:
         """Convert model to entity."""
-        return Bus(
+        bus = Bus(
             company_id=model.company_id,
             plate_number=model.plate_number,
             capacity=model.capacity,
@@ -30,6 +30,11 @@ class BusRepositoryImpl(BaseRepository[Bus, BusModel], BusRepository):
             year=model.year,
             bus_id=model.id
         )
+        # Set maintenance fields
+        bus._mileage = model.mileage or 0
+        bus._last_maintenance_date = model.last_maintenance_date
+        bus._next_maintenance_due = model.next_maintenance_due
+        return bus
 
     def _entity_to_model(self, entity: Bus) -> BusModel:
         """Convert entity to model."""
@@ -42,9 +47,9 @@ class BusRepositoryImpl(BaseRepository[Bus, BusModel], BusRepository):
             status=entity.status.value,
             features=entity.features,
             year=entity.year,
-            mileage=entity.mileage,
-            last_maintenance_date=entity.last_maintenance_date,
-            next_maintenance_due=entity.next_maintenance_due
+            mileage=entity._mileage,
+            last_maintenance_date=entity._last_maintenance_date,
+            next_maintenance_due=entity._next_maintenance_due
         )
 
     @log_execution()

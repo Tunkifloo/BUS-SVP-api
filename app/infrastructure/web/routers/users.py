@@ -13,6 +13,66 @@ from ....core.exceptions import EntityNotFoundException, EntityAlreadyExistsExce
 router = APIRouter(prefix="/users")
 
 
+@router.get("/public", response_model=List[UserResponseSchema])
+async def get_public_users(
+        session: AsyncSession = Depends(get_database_session)
+):
+    """Get all users (public endpoint for testing)."""
+    try:
+        # For now, return mock data to test the frontend
+        from datetime import datetime
+        
+        mock_users = [
+            UserResponseSchema(
+                id="1",
+                name="Admin User",
+                email="admin@bus.com",
+                role="admin",
+                is_active=True,
+                email_verified=True,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            ),
+            UserResponseSchema(
+                id="2",
+                name="Juan Pérez",
+                email="juan@email.com",
+                role="user",
+                is_active=True,
+                email_verified=True,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            ),
+            UserResponseSchema(
+                id="3",
+                name="María García",
+                email="maria@email.com",
+                role="user",
+                is_active=True,
+                email_verified=False,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            ),
+            UserResponseSchema(
+                id="4",
+                name="Carlos López",
+                email="carlos@email.com",
+                role="user",
+                is_active=False,
+                email_verified=True,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            )
+        ]
+        
+        return mock_users
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve users"
+        )
+
 def require_admin(request: Request):
     """Require admin role."""
     if not hasattr(request.state, 'user') or request.state.user.get('role') != 'admin':

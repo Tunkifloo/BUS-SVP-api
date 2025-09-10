@@ -146,17 +146,19 @@ class ReservationRepositoryImpl(BaseRepository[Reservation, ReservationModel], R
         reservations_with_details = []
         for reservation_model, schedule_model, route_model, company_model, bus_model in result:
             reservations_with_details.append({
-                "id": reservation_model.id,
-                "user_id": reservation_model.user_id,
-                "schedule_id": reservation_model.schedule_id,
-                "seat_number": reservation_model.seat_number,
-                "price": reservation_model.price,
-                "status": reservation_model.status,
-                "reservation_code": reservation_model.reservation_code,
-                "cancellation_reason": reservation_model.cancellation_reason,
-                "cancelled_at": reservation_model.cancelled_at.isoformat() if reservation_model.cancelled_at else None,
-                "completed_at": reservation_model.completed_at.isoformat() if reservation_model.completed_at else None,
-                "created_at": reservation_model.created_at.isoformat(),
+                "reservation": {
+                    "id": reservation_model.id,
+                    "user_id": reservation_model.user_id,
+                    "schedule_id": reservation_model.schedule_id,
+                    "seat_number": reservation_model.seat_number,
+                    "price": reservation_model.price,
+                    "status": reservation_model.status,
+                    "reservation_code": reservation_model.reservation_code,
+                    "cancellation_reason": reservation_model.cancellation_reason,
+                    "cancelled_at": reservation_model.cancelled_at.isoformat() if reservation_model.cancelled_at else None,
+                    "completed_at": reservation_model.completed_at.isoformat() if reservation_model.completed_at else None,
+                    "created_at": reservation_model.created_at.isoformat()
+                },
                 "schedule": {
                     "id": schedule_model.id,
                     "departure_time": schedule_model.departure_time,

@@ -47,6 +47,40 @@ class CompanyRepositoryImpl(BaseRepository[Company, CompanyModel], CompanyReposi
             rating=entity.rating,
         )
 
+    @log_execution()
+    async def exists_by_email(self, email: str) -> bool:
+        """Check if company exists by email."""
+        result = await self._session.execute(
+            select(CompanyModel).where(CompanyModel.email == email)
+        )
+        return result.scalar_one_or_none() is not None
+
+    @log_execution()
+    async def exists_by_name(self, name: str) -> bool:
+        """Check if company exists by name."""
+        result = await self._session.execute(
+            select(CompanyModel).where(CompanyModel.name == name)
+        )
+        return result.scalar_one_or_none() is not None
+
+    @log_execution()
+    async def find_by_email(self, email: str) -> Optional[Company]:
+        """Find company by email."""
+        result = await self._session.execute(
+            select(CompanyModel).where(CompanyModel.email == email)
+        )
+        model = result.scalar_one_or_none()
+        return self._model_to_entity(model) if model else None
+
+    @log_execution()
+    async def find_by_name(self, name: str) -> Optional[Company]:
+        """Find company by name."""
+        result = await self._session.execute(
+            select(CompanyModel).where(CompanyModel.name == name)
+        )
+        model = result.scalar_one_or_none()
+        return self._model_to_entity(model) if model else None
+
     def _entity_to_model(self, entity: Route) -> RouteModel:
         """Convert entity to model."""
         return RouteModel(

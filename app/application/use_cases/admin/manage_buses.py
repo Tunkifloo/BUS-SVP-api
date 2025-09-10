@@ -174,9 +174,11 @@ class ManageBusesUseCase:
                 "year": bus.year,
                 "features": bus.features,
                 "status": bus.status.value,
-                "mileage": bus.mileage,
-                "last_maintenance_date": bus.last_maintenance_date,
-                "created_at": bus.created_at.isoformat()
+                "mileage": bus._mileage,
+                "last_maintenance_date": bus._last_maintenance_date if bus._last_maintenance_date else None,
+                "next_maintenance_due": bus._next_maintenance_due if bus._next_maintenance_due else None,
+                "created_at": bus.created_at.isoformat(),
+                "updated_at": bus.updated_at.isoformat()
             }
             for bus in buses
         ]

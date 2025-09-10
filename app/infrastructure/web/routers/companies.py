@@ -14,6 +14,66 @@ from ....core.exceptions import EntityNotFoundException, EntityAlreadyExistsExce
 router = APIRouter(prefix="/companies")
 
 
+@router.get("/public", response_model=List[CompanyResponseSchema])
+async def get_public_companies(
+        active_only: bool = True,
+        session: AsyncSession = Depends(get_database_session)
+):
+    """Get all companies (public endpoint)."""
+    try:
+        # For now, return mock data to test the frontend
+        from datetime import datetime
+        
+        mock_companies = [
+            CompanyResponseSchema(
+                id="1",
+                name="TransAndina",
+                email="info@transandina.com",
+                phone="+51 999 888 777",
+                address="Av. Javier Prado 123, Lima",
+                description="Empresa líder en transporte interprovincial",
+                status="active",
+                rating=4.5,
+                total_trips=500,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            ),
+            CompanyResponseSchema(
+                id="2",
+                name="Cruz del Sur",
+                email="info@cruzdelsur.com",
+                phone="+51 999 777 666",
+                address="Av. Grau 456, Lima",
+                description="Transporte de lujo y confort",
+                status="active",
+                rating=4.8,
+                total_trips=750,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            ),
+            CompanyResponseSchema(
+                id="3",
+                name="Oltursa",
+                email="info@oltursa.com",
+                phone="+51 999 666 555",
+                address="Av. Túpac Amaru 789, Lima",
+                description="Transporte económico y confiable",
+                status="active",
+                rating=4.2,
+                total_trips=300,
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            )
+        ]
+        
+        return mock_companies
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve companies"
+        )
+
 def require_admin(request: Request):
     """Require admin role."""
     if not hasattr(request.state, 'user') or request.state.user.get('role') != 'admin':
@@ -21,7 +81,6 @@ def require_admin(request: Request):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin access required"
         )
-
 
 @router.get("/", response_model=List[CompanyResponseSchema])
 async def get_companies(
@@ -43,7 +102,6 @@ async def get_companies(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve companies"
         )
-
 
 @router.post("/", response_model=CompanyResponseSchema)
 async def create_company(

@@ -2,6 +2,6 @@
 """
 FastAPI routers.
 """
-from . import auth, routes, reservations, health
+from . import auth, routes, reservations, health, buses, companies, users, schedules
 
-__all__ = ["auth", "routes", "reservations", "health"]
+__all__ = ["auth", "routes", "reservations", "health", "buses", "companies", "users", "schedules"]
