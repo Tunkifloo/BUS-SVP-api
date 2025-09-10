@@ -101,7 +101,12 @@ class UserRepositoryImpl(BaseRepository[User, UserModel], UserRepository):
         existing_model.phone = user.phone
         existing_model.is_active = user.is_active
         existing_model.email_verified = user.email_verified
-        existing_model.last_login = user.last_login
+        # Convert string to datetime if needed
+        if user.last_login:
+            from datetime import datetime
+            existing_model.last_login = datetime.fromisoformat(user.last_login.replace('Z', '+00:00'))
+        else:
+            existing_model.last_login = None
         existing_model.failed_login_attempts = str(user.failed_login_attempts)
 
         updated_model = await self.update_model(existing_model)
