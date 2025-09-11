@@ -29,7 +29,7 @@ class Settings:
         self.database_port: int = int(os.getenv("DATABASE_PORT", "5432"))
         self.database_name: str = os.getenv("DATABASE_NAME", "bus_system_db")
         self.database_user: str = os.getenv("DATABASE_USER", "postgres")
-        self.database_password: str = os.getenv("DATABASE_PASSWORD", "admin")
+        self.database_password: str = os.getenv("DATABASE_PASSWORD", "280410")
 
         # CORS Settings
         self.allowed_origins: List[str] = self._parse_list(os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5173"))
@@ -51,9 +51,9 @@ class Settings:
         self.log_level: str = os.getenv("LOG_LEVEL", "INFO")
         self.log_format: str = os.getenv("LOG_FORMAT", "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-        # Build database URL if not provided
+        # Build database URL if not provided (CORREGIDO para usar asyncpg)
         if not self.database_url:
-            self.database_url = f"postgresql+psycopg2://{self.database_user}:{self.database_password}@{self.database_host}:{self.database_port}/{self.database_name}"
+            self.database_url = f"postgresql+asyncpg://{self.database_user}:{self.database_password}@{self.database_host}:{self.database_port}/{self.database_name}"
 
     def _parse_list(self, value: str) -> List[str]:
         """Parse comma-separated string into list."""
